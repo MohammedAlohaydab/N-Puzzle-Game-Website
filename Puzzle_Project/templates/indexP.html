@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{%block body %}
+
+      
+
+
+    <div id="Home">
+        
+        <div id="title">
+            N Puzzle
+        </div>
+
+        <div class="details">
+            <div id="dialog" ><p> Size must be filled out</p> 
+                <div class="okbtn">OK</div>
+            </div> <!--hidden-->
+            <p>Enter the size of N </p>
+           
+           <div class="form_container">
+            <form name="myForm" id="sizeN"> 
+                <div  id="input-sizeN">
+                  <input id="sizeNbox" type="number" min="2" max="9" name="sizeN" required > 
+                  
+                </div>
+              </form>
+           </div>     
+        
+            <div class="choices">
+                <div class="button nextbtn">Next</div>
+                </div>
+                
+        </div>
+    </div>
+   
+    <div id="select-state" style="display: none">
+        <div id="title">
+            N Puzzle
+        </div>
+
+        <div class="details">
+            <p>Select the initial state </p>   
+        
+            <div class="choices">
+                <div class="button" id="custombtn">Custom</div>
+                <div class="button" id="randombtn"> Random </div>
+                </div>
+                
+        </div>
+        
+        
+
+    </div>  
+    <div id="chooseBetweenCustom" style="display: none">
+        
+        <div id="title">
+            N Puzzle
+        </div>
+       <div class="details" id="customDetails">
+        <p>Which custom you want ? </p> 
+        <p>Auto : Move given Puzzle by clicking on the possible boxes</p>  
+        <p>Manual : Enter game state numbers from top-left to right-bottom</p>
+    
+        <div class="choices">
+            <div class="button" id="autobtn"> Auto </div>
+            <div class="button" id="manualbtn"> Manual </div>
+            </div>        
+
+         </div>
+    </div>
+
+    <div id="customStateContainer" style="display: none">
+        <p id="customDsc">Move the Puzzle by clicking on the boxes</p>
+
+        <div id="customState" style="display:none">
+        </div>
+
+        <div id="saving" style="display:none">
+            
+                <div class="button" id="saveSliding"> Save </div>
+     
+        </div>  
+        <div id="message-solvable" style="display: none">
+           
+            <div class="choices" >
+                <div class="button" id="retrySliding"> retry </div>
+                </div>  
+        </div>
+           
+           
+        </div>
+   
+
+    <div id="show-manual">
+
+        <div id="title">
+            N Puzzle
+        </div>
+       <div class="details" id="customDetails">
+          
+            <p class="expState" id="firstexplain">Enter game state, from top-left to right-bottom (do not forget '-' between numbers)</p>
+            <p class="expState" id="exampleSameSize"></p>
+        
+       
+        <div id="stateNumbersContainer">
+                    <form id="manualSubmit">
+                        <input id="stateNumbers" type="text"  name="stateNumbers" required >
+                    </form>
+                   
+        </div>
+       
+        <!-- <div id="manual-saving"> -->
+            <div class="button" id="saveState"> Save</div>
+        <!-- </div>  -->
+
+            <div id="manualMessage" style="display: none">
+           
+                <div class="choices" >
+                    <div class="button" id="retryManual"> retry </div>
+                    </div>  
+            </div>
+                 
+                  
+
+         </div>
+         
+       
+       </div>
+  
+    <div id="selection-page" style="display:none">
+        <div id="title">
+            N Puzzle
+        </div>
+        <div class="details">
+                    <p>Choose the search algorithm </p>
+                <div class="form_container">
+                    <form name="selectForm" action="POST" id="sizeN">
+                        {% csrf_token %} 
+                        <div  id="select-algo">
+                            <select name="selectedOp" size="1" required id="select-form">
+                                <option value="" disabled selected> Click to choose  </option > 
+                                <option value="BFS"> BFS </option> 
+                                <option value="DFS"> DFS </option>
+                                 <option value="IDFS"> Itreative Deeping Search</option> 
+                                 <option value="DLFS"> Depth Limited Search</option> 
+                                 <option value="GS"> Greedy Search </option> 
+                                 <option value="AStar"> A* Search </option>
+                                 </select>
+                              
+                        </div>
+                    </form>
+                </div>     
+                    
+                    <div class="choices">
+                        
+                        <div class="button nextbtn"> Next</div>
+                        
+                  
+                        </div>
+                </div>
+
+    </div>
+
+    <div id="depth-page">
+        <div id="title">
+            N Puzzle
+        </div>
+        <div class="details">
+            <p>Enter the Depth </p>
+                <div  id="depth-container">
+                    <form id="depthForm">
+                        <input id="depth-size" type="number" min="0" required > 
+                    </form>
+                 
+                  
+                </div>   
+        
+            <div class="choices">
+                <div class="button nextbtn" id="depthbtn"> Next</div>
+                </div>
+                
+        </div>
+    </div>
+    
+    <div id="game-container" style="display: none;">
+        <div id="statistic" style="display: none">
+           
+            <div class="vertical" > <p id="firstp"></p></div>
+            <div class="vertical"> <p id="secondp"></p></div>
+            <div class="vertical"> <p id="thirdp"></p></div>
+            <div class="vertical"> <p id="forthp"></p></div>
+            <div class="vertical"> </div>
+            </div>
+        
+            <div id="newGameContainer" style="display: none">
+                <div class="button" id="newGame" style="display: none"> New Game </div>  
+            </div>
+             
+        <div id="game" style="display:none">
+            
+        </div>
+        <div id="shuffle" style="display:none">
+            <span>Shuffle</span> 
+                <div class="button" id="startShuffle"> 
+                    {% csrf_token %} 
+                    Start </div>
+                    
+    </div>
+   
+   
+    <div id="dialogForGame" ><p> Loading!</p> 
+       
+    </div> <!--hidden-->
+    </div>
+    <!-- <div id="shuffle" style="display:none">
+        <span>Shuffle</span>
+     
+            
+            <div class="button" id="startShuffle">
+                {% csrf_token %} 
+                Start
+        </div>
+      
+        
+       
+          
+    </div> -->
+
+
+        
+
+
+<script src="../static/js/jquery-3.4.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+<script src="../static/js/home.js"></script>
+
+{% endblock %}
+
