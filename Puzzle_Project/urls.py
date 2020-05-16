@@ -27,7 +27,8 @@ urlpatterns = [
     path('solution/',views.solution,name="solution"),
     path('check_isSolvable/',views.isSolvable,name="check_isSolvable"),
     path('setZero/',views.setNodeZero,name="setZero"),
-    # path('game/<int:size>/<str:algorithm>',views.game_random,name="game"),
+    path('check_goal_test/',views.check_goal_test,name="check_goal_test"),
+
  
 ]
  

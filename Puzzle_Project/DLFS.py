@@ -9,7 +9,7 @@ class DLFS(Search):
     numProcessedNodes = 0   ##
     maxStoredNodes = 0      ##
     timeTaken = 0           ##
-   
+    searchCanceled = False
 
     def __init__(self , max_stored=0):
         self.max_stored = max_stored
@@ -24,12 +24,14 @@ class DLFS(Search):
         frontier = Stack() ## List Stack
         frontier.put(start_node)
         explored = set()
-        # star = "**********************************"
         print("\nInitial State ---------- Depth: {0}".format(start_node.depth))
         while not (frontier.empty()):
+            if DLFS.searchCanceled :
+                print("canceled!")
+                return
             self.max_stored = max(self.max_stored ,frontier.qsize()+len(explored))
             node = frontier.get()
-            # print("--------------------------------------------------")
+
             if node.goal_test().all():
                 print("***************GOAL STATE FOUND*******************")
                 print("\n")
@@ -39,13 +41,13 @@ class DLFS(Search):
                 DLFS.numProcessedNodes=node.num_processed  ##
                 DLFS.timeTaken = time.time() - start       ##
                 return node.find_solution()
-            # print("Depth = {0} \n".format(node.depth))
-            # print("{0}".format(node.display()))
-            # print(star)
             if ( node.depth < Depth and tuple(node.state) not in explored):
                 explored.add(tuple(node.state))
                 children = node.generate_child()
                 for child in children:
+                    if DLFS.searchCanceled :
+                        print("canceled!")
+                        return
                     if tuple(child.state) not in explored:
                             frontier.put(child)
 

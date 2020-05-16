@@ -8,11 +8,11 @@
     margin: 80px auto;
 } */
 
-input[type=number]::-webkit-inner-spin-button, 
+/* input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   margin: 0; 
-}
+} */
 
 body{
  background-color:  #116979;
@@ -51,21 +51,30 @@ body{
 }
 .choices{
     text-align: center;
-    padding-top: 10px;
+    /* padding-top: 10px; */
 }
 #sizeNbox{
+    font-size: large;
+    text-align: center;
     background-color:#ebebeb;
-    width: 110px;
+    width: 350px;
+    border-radius: 7px;
 }
-.choices #custombtn,#randombtn,#manualbtn,#autobtn{
+.choices #custombtn,#randombtn,#manualbtn,#autobtn,#cancelbtn,#saveState,#retryManual,#cancelbtnWithRetry,#saveDepth,#cancelbtnForDepth{
     margin-right: 25px;
     display: inline;
     font-family: 'Quicksand';
-    font-size: 24px;
+    font-size: 20px;
     color: #ebebeb;
-    line-height: 60px;
-    text-align: center;
+    line-height: 45px;
+  
     
+}
+#stopbtn{
+    display: none;
+}
+#saveAndcancelBtns{
+    text-align: center;
 }
 #manualbtn{
     color: #ebebeb !important;
@@ -146,13 +155,32 @@ body{
     flex-direction:row;
     flex-wrap:wrap;
     margin: 0 auto;
-    margin-top: 30px;
+    margin-top: 10px;
     margin-bottom: 20px;
     text-align: center;
-    
+    width: 350px;   
+}
+#game-container{
+    float: left;
+    width:78%;
+}
+#search{
+    float: right;
+    /* margin-left: 10px; */
+    margin-top: 70px;
+    width: 18%;
+}
+#state-container{
+    margin-bottom: 25px;
+}
+#search p {
+    margin: 0 auto;
+}
+#two-section{
+    width: 590px;
+    margin: 0 auto;
   
 }
-
 /* #game {
     background-color: #ebebeb;
     width: 456px;
@@ -195,8 +223,8 @@ span {
 }
 
 .details {
-    border-top: 1px #ebebeb solid;
-    border-bottom: 1px #ebebeb solid;
+    /* border-top: 1px #ebebeb solid; */
+    /* border-bottom: 1px #ebebeb solid; */
     height: 200px;
 }
 #customDetails{
@@ -215,9 +243,10 @@ span {
      text-align: center;
 }
 .vertical {	
-  display:inline;
+  /* display:inline; */
   border-left: 2px solid #ebebeb;
-  margin-left:10px;
+  border-right: 2px solid #ebebeb;
+  margin-left:40px;
 }
 .vertical p{
     font-family: 'Quicksand';
@@ -233,6 +262,14 @@ span {
     line-height: 50px;
     text-align: center;
 }
+.text-style{
+    font-family: 'Quicksand';
+    font-size: 16.81px;
+    color: #ebebeb;
+    line-height: 60px;
+    text-align: center;
+}
+
 #custom-dialog{
     display: none;
     position: relative;
@@ -269,12 +306,20 @@ span {
     color: #ebebeb;
     text-align: center 
 }
-#input-sizeN, .customDsc2{
+.customDsc2{
     
     font-family: 'Quicksand';
     font-size: 24px;
     color: #ebebeb;
     text-align: center
+}
+#input-sizeN{
+    margin-top: 70px;
+    font-family: 'Quicksand';
+    /* font-size: 24px; */
+    color: #ebebeb;
+    text-align: center ;
+    position: relative;
 }
 #select-algo {
             font-family: 'Quicksand';
@@ -286,7 +331,7 @@ span {
 #select-form{
     background-color: lightgray;
     width: 170px;
-   border-radius: 3px;
+   border-radius: 5px;
    border: 0.2px;
     border-color: darkgray;
 }
@@ -309,11 +354,14 @@ span {
     padding: 3px;
     width: 80px;
     border: 1px #34495e solid;
-    border-radius: 8px;
+    border-radius: 10px;
     font-family: 'Quicksand';
-    font-size: 24px;
+    font-size: 20px;
     color: #ebebeb;
     background-color: #34495e;
+}
+#solvebtn,#stopbtn{
+    margin-left: 60px;
 }
 #newGameContainer{
   
@@ -321,18 +369,21 @@ span {
     margin-top: 10px;
     text-align: center;
 }
-
+#errorInChooseAlgo{
+    color: red;
+    display: none;
+}
 #dialogForGame,#dialog-unsolvable{
     display: none;
     position: relative;
-    width: 100px;
+    width: 110px;
     height: 50px;
     padding: 10px;
     background: #34495e;
     color: #ebebeb;;
     border: 1px solid #1a1a1a;
-    font-size: 90%;
-    text-align: center;
+    font-size: 24px;
+
     margin: 0 auto;
   
 }
@@ -354,9 +405,7 @@ span {
     margin-left: 37.5%;
  
   }
-#choose .button {
-    width: 100px;
-}
+
 
 #select {
     text-align: center;
@@ -375,6 +424,7 @@ select {
 .piece ,#customState .piece{
     
     background-color:#18b0b0;
+    
     border-radius: 10px;
     margin: 1px;
     position: relative;
@@ -393,13 +443,7 @@ select {
     text-align: center;
     position: relative;
 }
-/* #saveState{
-    margin-top: 10px;
-    position: relative;
-    left: -1000px;
-    color: #34495e;
-    text-align: center;
-} */
+
 #shuffle,#saveCustomState ,#saving,#manual-saving{
     position: relative;
     left: -1000px;
@@ -413,7 +457,26 @@ select {
     
 }
 .numbers{
-  margin-top: 50%;
-   font-family: Quicksand;
+   
+   
+   font-family: 'Quicksand';
     text-align: center;
+}
+#container,#depthcontainer{
+    width: 100%;
+    height: 100%;
+    top: 0;
+    position: absolute;
+    visibility: hidden;
+    display: none;
+    background-color: rgba(22,22,22,0.5); /* complimenting your modal colors */
+}
+#container:target, #depthcontainer:target {
+    visibility: visible;
+    display: block;
+}
+.reveal-modal {
+    position: relative;
+    margin: 0 auto;
+    top: 25%;
 }

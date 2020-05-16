@@ -9,7 +9,7 @@ class GreadySearch(Search):
     numProcessedNodes = 0
     maxStoredNodes = 0
     timeTaken = 0
-
+    searchCanceled = False
     def __init__(self, max_stored=0):
         self.max_stored = max_stored
 
@@ -21,19 +21,18 @@ class GreadySearch(Search):
             return start_node.find_solution()
 
         frontier = []
-        # heapq.heappush(frontier,(Heuristic.f(start_node),number_nodes,start_node))
-        # frontier.push(start_node, frontier.h(start_node.state, start_node.goal_state()))
         heapq.heappush(frontier, (Heuristic.h(start_node.state, start_node.goal_state()), number_nodes, start_node))
 
         number_nodes += 1
         explored=set()
-        star="**********************************"
-        print("\nInitial State ---------- Depth: {0}".format(start_node.depth))
         while frontier:
+            if GreadySearch.searchCanceled :
+                print("canceled!")
+                return
             self.max_stored=max(self.max_stored, len(frontier)+len(explored))
             v=heapq.heappop(frontier)
             node=v[-1]
-            print("--------------------------------------------------")
+         
             if node.goal_test().all():
                 print("***************GOAL STATE FOUND*******************")
                 print("\n")
@@ -44,12 +43,12 @@ class GreadySearch(Search):
                 GreadySearch.timeTaken=time.time() - start
                 return node.find_solution()
 
-            # print("Depth = {0} \n".format(node.depth))
-            # print("{0}".format(node.display()))
-            # print(star)
             explored.add(tuple(node.state))
             children=node.generate_child()
             for child in children:
+                if GreadySearch.searchCanceled :
+                    print("canceled!")
+                    return
                 if tuple(child.state) not in explored:
                     heapq.heappush(frontier, (Heuristic.h(
                         child.state, child.goal_state()), number_nodes, child))

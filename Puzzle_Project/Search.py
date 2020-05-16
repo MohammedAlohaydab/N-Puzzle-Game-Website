@@ -21,3 +21,8 @@ class Search(ABC):
     @abstractmethod
     def timeTaken(self):
         pass
+
+    @property
+    @abstractmethod
+    def searchCanceled(self):
+        pass

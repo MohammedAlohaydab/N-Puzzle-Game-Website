@@ -14,7 +14,7 @@ class Node:
         self.depth = depth
         
         # self.indexEmptyTile = indexEmptyTile
-        Node.num_of_instances += 1 #space
+        Node.num_processed += 1 #space
         
     def get_size(self):
         return int(math.sqrt(len(self.state)))
@@ -49,8 +49,8 @@ class Node:
         return self.display()
 
     def goal_test(self):
-        Node.num_processed += 1 ##
-        return self.state ==self.goal_state()
+       
+        return self.state ==self.goal_state() 
  
     
     def find_legal_actions(self,i, j):

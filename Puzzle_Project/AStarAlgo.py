@@ -9,7 +9,7 @@ class AStarAlgo(Search):
     numProcessedNodes = 0   ##
     maxStoredNodes = 0      ##
     timeTaken = 0           ##
-   
+    searchCanceled = False
 
     def __init__(self , max_stored=0):
         self.max_stored = max_stored
@@ -25,13 +25,14 @@ class AStarAlgo(Search):
         heapq.heappush(frontier,(Heuristic.f(start_node),number_nodes,start_node))
         number_nodes= 1
         explored = set()   
-        # star = "**********************************"
         print("\nInitial State ---------- Depth: {0}".format(start_node.depth))
         while frontier:
+            if AStarAlgo.searchCanceled :
+                print("canceled!")
+                return
             self.max_stored = max(self.max_stored ,len(frontier)+len(explored)) ##
             v = heapq.heappop(frontier)
             node = v[-1]
-            # print("--------------------------------------------------")
             if node.goal_test().all():
                 print("***************GOAL STATE FOUND*******************")
                 print("\n")
@@ -42,13 +43,14 @@ class AStarAlgo(Search):
                 AStarAlgo.timeTaken = time.time() - start       ##
                 return node.find_solution()
             
-            # print("Depth = {0} \n". format(node.depth))
-            # print("{0}".format(node.display()))
-            # print(star)
             explored.add(tuple(node.state))
             children = node.generate_child()
             for child in children:
+                if AStarAlgo.searchCanceled :
+                    print("canceled!")
+                    return
                 if tuple(child.state) not in explored:
                     heapq.heappush(frontier,(Heuristic.f(child),number_nodes,child))
                     number_nodes += 1
+                    explored.add(tuple(child.state))
         return

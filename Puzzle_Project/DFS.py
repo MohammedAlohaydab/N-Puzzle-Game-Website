@@ -8,11 +8,12 @@ class DFS(Search):
     numProcessedNodes = 0   ##
     maxStoredNodes = 0      ##
     timeTaken = 0           ##
-   
+    searchCanceled = False
 
     def __init__(self , max_stored=0):
         self.max_stored = max_stored
     
+
     def DFS(self,initial_state):   
         start_node = Node(initial_state, None, None, 0)
         start = time.time()         ##
@@ -26,9 +27,11 @@ class DFS(Search):
         star = "**********************************"
         print("\nInitial State ---------- Depth: {0}".format(start_node.depth))
         while not (frontier.empty()):
+            if DFS.searchCanceled :
+                print("canceled!")
+                return
             self.max_stored = max(self.max_stored ,frontier.qsize()+len(explored))
             node = frontier.get()
-            print("--------------------------------------------------")
             if node.goal_test().all():
                 print("***************GOAL STATE FOUND*******************")
                 print("\n")
@@ -38,13 +41,14 @@ class DFS(Search):
                 DFS.numProcessedNodes=node.num_processed
                 DFS.timeTaken = time.time() - start 
                 return node.find_solution()
-            # print("Depth = {0} \n".format(node.depth))
-            # print("{0}".format(node.display()))
-            # print(star)
+
             explored.add(tuple(node.state))
             children = node.generate_child()
             for child in children:
+                if DFS.searchCanceled :
+                    print("canceled!")
+                    return
                 if tuple(child.state) not in explored:
-                        frontier.put(child)
+                    frontier.put(child)
 
         return
