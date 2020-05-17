@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
-
 {%block body %}
 
      <div id="home-page">
-        <div id="two-section">
+        <div id="two-section" >
             <div id="game-container">
                 <div  id="input-sizeN">
                     {% csrf_token %} 
@@ -28,8 +27,8 @@
                 <div id="state-container">
                     <p class="text-style" >Change state: </p>
                     <div class="choices">
-                        <div class="button" id="custombtn">Custom</div>
-                        <div class="button" id="randombtn"> Randomize </div>
+                        <div class="button buttonInline" id="custombtn">Custom</div>
+                        <div class="button buttonInline" id="randombtn"> Randomize </div>
                         </div>
                 </div>
 
@@ -54,7 +53,7 @@
         
       
         <div id="container">
-            <div id="exampleModal" class="reveal-modal">
+            <div class="reveal-modal">
             
                 <div class="details" id="customDetails">
                     <p class="expState" id="firstexplain">Enter game state, from top-left to right-bottom (do not forget '-' between numbers)</p>
@@ -66,7 +65,7 @@
                 </div>
                 <div id="saveAndcancelBtns">
                     <div class="button" id="saveState"> Save</div>
-                    <div class="button" id="cancelbtn"> Cancel</div>
+                    <div class="button buttonInline" id="cancelbtn"> Cancel</div>
                 </div>
                  
                     <div id="manualMessage" style="display: none">
@@ -80,10 +79,10 @@
         </div>
         
         <div id="depthcontainer">
-            <div id="exampleModal" class="reveal-modal">
+            <div class="reveal-modal">
             
                 <div class="details" id="customDetails">
-                    <p class="expState" id="firstexplain">Enter the Depth </p>
+                    <p class="expState" id="firstexplain">Enter the Depth (e.g. 20) </p>
                   
                 <div id="stateNumbersContainer">
                     <form id="depthForm">
@@ -93,18 +92,15 @@
                 <div id="saveAndcancelBtns">
                     <div class="button" id="saveDepth"> Save</div>
                     <div class="button" id="cancelbtnForDepth"> Cancel</div>
-                </div>
-    
+                    </div>
                  </div>
             </div>
         </div>
      </div>
-   
-   
 
-<!-- <script src="../static/js/jquery-3.4.1.min.js"></script> -->
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script src="../static/js/test.js"></script>
+<script src="../static/js/home3.js"></script>
 
 {% endblock %}
 

@@ -1,23 +1,5 @@
 $(function () {
-    // variables   
-    var max_chars = 1;
-    var CustomState = false;  // used?    
-    var init;
-    var empty = [];
-    var tempState = [];
-    var state_size;
-    var sizeOfPex;
-    var period;
-    var sol_path = [];
-    var zeroID;
-    var isSolveable;
-    var pathCost;
-    var maxStoredNodes;
-    var numProcessedNodes;
-    var timeTaken;
-    var searchMode= false;    
-    var stopClicked = false;
-    var gameSize = String($("#game").width());
+
     // initalize
     generateRandomState(3,true);
    
@@ -34,22 +16,11 @@ $(function () {
     });
 
     $('#sizeNbox').keydown(function (e) {
-        if ($(this).val().length >= max_chars) {
-            $(this).val($(this).val().substr(0, max_chars));
-        }
-        if ($(this).val() < 2) {
-            $(this).val("");
-        }
+         checkIntegerInput(this,1,2);
     });
     $('#sizeNbox').keyup(function (e) {
-        if ($(this).val().length >= max_chars) {
-            $(this).val($(this).val().substr(0, max_chars));
-        }
-        if ($(this).val() < 2) {
-            $(this).val("");
-        }
+        checkIntegerInput(this,1,2);
     });
-
     $("#sizeNbox").change(function(){
         newRandomState();
         hideStatisticsIfThere();
@@ -93,6 +64,13 @@ $(function () {
         stopBtnAlgo();
     });
 
+    $('#depth-size').keydown(function (e) {
+        checkIntegerInput(this,Infinity,0);
+   });
+   $('#depth-size').keyup(function (e) {
+       checkIntegerInput(this,Infinity,0);
+   });
+
     $("#cancelbtnForDepth").click(function(){
         $('#depthcontainer').css('visibility', 'hidden');
         $('#depthcontainer').css('display', 'none');
@@ -117,6 +95,7 @@ $(function () {
          searchAlgo();
      });
 // functions
+
     function generateRandomState(sizeofState,firstTime){
         $.ajax({
             type: 'POST',
@@ -131,7 +110,7 @@ $(function () {
                
                 if(firstTime){
                         buildBoard();         
-                        $("#game").show().animate({ left: "0px" }, 900);
+                        $("#game").show().animate({ left: "0px" }, 650);
             }
                 else{
                     $("#game").empty();
@@ -150,6 +129,36 @@ $(function () {
     }
 
 });
+    // variables   
+    var CustomState = false;  // used?    
+    var init;
+    var empty = [];
+    var tempState = [];
+    var state_size;
+    var sizeOfPex;
+    var period;
+    var sol_path = [];
+    var zeroID;
+    var isSolveable;
+    var pathCost;
+    var maxStoredNodes;
+    var numProcessedNodes;
+    var timeTaken;
+    var searchMode= false;    
+    var stopClicked = false;
+    var gameSize = String($("#game").width());
+    var checkGoalInterval = setInterval(boxInCorrectPosition,10);
+    var checkSolvedByUser = setInterval(solvedByUser,10);
+
+function checkIntegerInput(id,max_chars,minValue) {
+    if ($(id).val().length >= max_chars ) {
+        $(id).val($(id).val().substr(0, max_chars));
+    }
+    if ($(id).val() < minValue || !$.isNumeric($(id).val()) ) {
+        $(id).val("");
+    }
+}
+
 
 function showEnterCustomState() {
     var expampleState = "";
@@ -399,6 +408,8 @@ function ckeckIfDLFS() {
 
 function submitDepth() {
     var d = $("#depth-size").val();
+    if(d ==="")
+        return;
     setDepth(d);
     searchAlgo();
     $('#depthcontainer').css('visibility', 'hidden');
@@ -436,9 +447,10 @@ function getSolution(curState) {
     }).done(function (data) {
         if (data.solution === null) {
             if (getDepth() !== 0) {
+                var curDepth = Number(getDepth());
                 $("#dialogForGame ").css("width", "380px");
                 $("#dialogForGame > p").css("font-size", "20px");
-                $("#dialogForGame > p").text("Could not find the solution at depth = " + getDepth() + " !");
+                $("#dialogForGame > p").text("Could not find the solution at depth = " + curDepth + " !");
                 $("#stopbtn").hide();
                 $("#solvebtn").show();
             }
@@ -468,6 +480,7 @@ function setProcessedNodesZero() {
     }
     );
 }
+var acquireLock = false;
 //  Builds the game board by filling the pieces with the current state (either random or custom) with help of "init"
 function buildBoard() {
     var size = Number($("#sizeNbox").val());
@@ -496,7 +509,9 @@ function buildBoard() {
         $(this).css("cursor", "pointer");
     });
 
-    $("#game > .piece").click(function (event) { /// when
+    $("#game > .piece").click(function (event) { /// when clicked on box(number)
+        if(!acquireLock){ // critical section! no other boxes can move until the current box finishes
+        acquireLock = true;
         hideStatisticsIfThere();
         $("#errorInChooseAlgo").hide();
         if(! solvedState())
@@ -505,57 +520,11 @@ function buildBoard() {
         if (getMovables().includes(id)) {
             move(id, "game");
         }
+        else{
+            acquireLock = false;
+        }
+    }
     });
-
-
-
-
-
-
-    // -----------
-    // var size = Number($("#sizeNbox").val());
-    // for (var i = 0; i < size; i++) {
-    //     for (var j = 0; j < size; j++) {
-    //         var tempid = [j, i];
-    //         if ( init[j + '' + i]=== 0) {
-    //             empty = tempid;
-    //             alert("init["+j+"," + i+"] = "+init[j + '' + i]);
-    //             $("#game").append("<div class='piece' id='" + tempid.join("") + "'><h2 class='numbers'></h2></div>");
-    //         }
-    //         else {
-    //             // alert("init["+j+"," + i+"] = "+init[j + '' + i]);
-    //              $("#game").append("<div class='piece' id='" + tempid.join("") + "'><h2 class='numbers'>" + init[j + '' + i] + "</h2></div>")
-    //                 }
-          
-    //     }
-    // }
-
-  
-    // $("#game").css({ width:gameSize+"px" });
-    // $("#game").css({ padding: 3 });
-    // $("#game > .piece").css({ width: sizeOfPex + "px" });
-    // $("#game > .piece").css({ height: sizeOfPex + "px" });
-    // alert("empty = "+empty.join(""));
-    // var tmpGet = "#" + empty.join("");
-    
-    // $(tmpGet).css("width", "0px");
-    // $(tmpGet).css("height", "0px");
-
-    // $("#game > " + tmpGet).css({ background: "none" });
-    // $(".numbers").css("font-size",Number((0.5/state_size))*250+"px;");
-    // $(".numbers").css("margin-top",Number(sizeOfPex/2)+"px;");
-    // $("#game > .piece").mouseenter(function () {
-    //     $(this).css("cursor", "pointer");
-    // });
-
-
-
-    // $("#game > .piece").click(function (event) {
-    //     var id = $(this).attr('id');
-    //     if (getMovables().includes(id)) {
-    //         move(id, "game");
-    //     }
-    // });
 
 }
 
@@ -563,12 +532,8 @@ function hideStatisticsIfThere() {
     $("#statistic").hide();
 }
 
-
-var checkGoalInterval = setInterval(boxInCorrectPosition,10);
-var checkSolvedByUser = setInterval(solvedByUser,10);
-
 function solvedByUser() {
-    if( !searchMode && solvedState()){
+    if( !searchMode && solvedState() ){
         $("#dialogForGame ").css("width", "110px");
         $("#dialogForGame > p").text("Solved!");
         $("#dialogForGame").show().animate({ left: "0px", opacity: 1 }, 900);    
@@ -577,8 +542,8 @@ function solvedByUser() {
         $("#dialogForGame").hide();
     }
 }
+// if certain box in the correct position then its color will be changed
 function boxInCorrectPosition() {
-  
     var counter =1;
     var size = Number($("#sizeNbox").val());
     for(var i=0; i < size ; i++)
@@ -612,12 +577,12 @@ function changeOpacity(id, coor, piece, whichBoard) {
     piece.attr('id', temp);
     empty = coor;
     zeroID = empty.join("");
+    acquireLock = false;
 }
 
 var id;
 var index;
-function shuffle() {
-    /* Shuffles the pieces */
+function shuffle() { /// shuffle the boxes when getting the solution in the search mode 
     if (!(sol_path === undefined) && sol_path.length > 0 && !stopClicked) {
        
         if (sol_path[0] === "RIGHT") {
@@ -636,14 +601,13 @@ function shuffle() {
             index = zeroID.substr(0, 1) + "" + (Number(zeroID.substr(1)) + 1);
             zeroID = index;
         }
-
         id = index;
         sol_path.splice(0, 1);
 
         move(id, "game");
         setTimeout(function () { shuffle() }, period);
     }
-    else {
+    else { // end of shuffle or stopped?
         if(!stopClicked)
             showStaistics();
         $("#stopbtn").hide();
