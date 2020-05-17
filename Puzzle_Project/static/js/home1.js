@@ -1,5 +1,21 @@
 $(function () {
-
+    // variables   
+    var CustomState = false;  // used?    
+    var init;
+    var empty = [];
+    var tempState = [];
+    var state_size;
+    var sizeOfPex;
+    var period;
+    var sol_path = [];
+    var zeroID;
+    var isSolveable;
+    var pathCost;
+    var maxStoredNodes;
+    var numProcessedNodes;
+    var timeTaken;
+    var searchMode= false;    
+    var stopClicked = false;
     // initalize
     generateRandomState(3,true);
    
@@ -16,10 +32,10 @@ $(function () {
     });
 
     $('#sizeNbox').keydown(function (e) {
-         checkIntegerInput(this,1,2);
+         checkIntegerInput(1,2);
     });
     $('#sizeNbox').keyup(function (e) {
-        checkIntegerInput(this,1,2);
+        checkIntegerInput(1,2);
     });
     $("#sizeNbox").change(function(){
         newRandomState();
@@ -65,10 +81,10 @@ $(function () {
     });
 
     $('#depth-size').keydown(function (e) {
-        checkIntegerInput(this,Infinity,0);
+        checkIntegerInput(Infinity,0);
    });
    $('#depth-size').keyup(function (e) {
-       checkIntegerInput(this,Infinity,0);
+       checkIntegerInput(Infinity,0);
    });
 
     $("#cancelbtnForDepth").click(function(){
@@ -85,10 +101,10 @@ $(function () {
 
     $("#solvebtn").click(function () {
         var ready = readyToSolve();
-        var isDLFS =  ckeckIfDLFS();
          if(!ready){
              return; 
          }
+         var isDLFS =  ckeckIfDLFS();
          if(isDLFS ){ // we will search in submitDepth(), after getting depth
              return;
          }
@@ -110,7 +126,7 @@ $(function () {
                
                 if(firstTime){
                         buildBoard();         
-                        $("#game").show().animate({ left: "0px" }, 650);
+                        $("#game").show().animate({ left: "0px" }, 900);
             }
                 else{
                     $("#game").empty();
@@ -129,36 +145,17 @@ $(function () {
     }
 
 });
-    // variables   
-    var CustomState = false;  // used?    
-    var init;
-    var empty = [];
-    var tempState = [];
-    var state_size;
-    var sizeOfPex;
-    var period;
-    var sol_path = [];
-    var zeroID;
-    var isSolveable;
-    var pathCost;
-    var maxStoredNodes;
-    var numProcessedNodes;
-    var timeTaken;
-    var searchMode= false;    
-    var stopClicked = false;
-    var gameSize = String($("#game").width());
-    var checkGoalInterval = setInterval(boxInCorrectPosition,10);
-    var checkSolvedByUser = setInterval(solvedByUser,10);
-
-function checkIntegerInput(id,max_chars,minValue) {
-    if ($(id).val().length >= max_chars ) {
-        $(id).val($(id).val().substr(0, max_chars));
+function checkIntegerInput(max_chars,minValue) {
+    if ($(this).val().length >= max_chars) {
+        $(this).val($(this).val().substr(0, max_chars));
     }
-    if ($(id).val() < minValue || !$.isNumeric($(id).val()) ) {
-        $(id).val("");
+    if ($(this).val() < minValue ) {
+        $(this).val("");
     }
 }
-
+var gameSize = String($("#game").width());
+var checkGoalInterval = setInterval(boxInCorrectPosition,10);
+var checkSolvedByUser = setInterval(solvedByUser,10);
 
 function showEnterCustomState() {
     var expampleState = "";
@@ -171,7 +168,7 @@ function showEnterCustomState() {
     expampleState += 0 + "-";
     expampleState += i;
 
-    $("#exampleSameSize").text("e.g. : " + expampleState);
+    $("#exampleSameSize").text("e.g. " + expampleState);
     $('#container').css('visibility', 'visible');
     $('#container').css('display', 'block');
 }
@@ -408,8 +405,6 @@ function ckeckIfDLFS() {
 
 function submitDepth() {
     var d = $("#depth-size").val();
-    if(d ==="")
-        return;
     setDepth(d);
     searchAlgo();
     $('#depthcontainer').css('visibility', 'hidden');
@@ -447,10 +442,9 @@ function getSolution(curState) {
     }).done(function (data) {
         if (data.solution === null) {
             if (getDepth() !== 0) {
-                var curDepth = Number(getDepth());
                 $("#dialogForGame ").css("width", "380px");
                 $("#dialogForGame > p").css("font-size", "20px");
-                $("#dialogForGame > p").text("Could not find the solution at depth = " + curDepth + " !");
+                $("#dialogForGame > p").text("Could not find the solution at depth = " + getDepth() + " !");
                 $("#stopbtn").hide();
                 $("#solvebtn").show();
             }
