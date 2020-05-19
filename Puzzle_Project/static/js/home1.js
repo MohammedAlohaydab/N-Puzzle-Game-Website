@@ -152,6 +152,8 @@ function newRandomState() {
     var enteredSize = checkInputSize();
     if( !enteredSize)
         return;
+    
+    var size = $("#sizeNbox").val();
     generateRandomState(size,false);
 }
 
@@ -573,7 +575,7 @@ function solvedByUser() {
 // if certain box in the correct position then its color will be changed
 function boxInCorrectPosition() {
     var counter =1;
-    var size = Number($("#sizeNbox").val());
+    var size =  Number(Math.sqrt((initial_List(init)).length)); // in case of the size not entered, get the current puzzle size (last size )
     for(var i=0; i < size ; i++)
         for(var j=0; j < size ; j++)
             if(counter++ === Number(init[j+""+i]) ){
