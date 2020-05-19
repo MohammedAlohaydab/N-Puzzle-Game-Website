@@ -21,6 +21,9 @@ $(function () {
         checkIntegerInput(this,1,2);
     });
     $("#sizeNbox").change(function(){
+        if(!finishedSeach)
+            return;
+        
         newRandomState();
         hideStatisticsIfThere();
     });
@@ -83,14 +86,18 @@ $(function () {
     });
 
     $("#solvebtn").click(function () {
+        finishedSeach= false;
         var ready = readyToSolve();
          if(!ready){
+            finishedSeach= true;
              return; 
          }
          var isDLFS =  ckeckIfDLFS();
          if(isDLFS ){ // we will search in submitDepth(), after getting depth
-             return;
+            finishedSeach= true; 
+            return;
          }
+        
          searchAlgo();
      });
 
@@ -114,6 +121,7 @@ var searchMode= false;
 var stopClicked = false;
 var Depth = 0;
 var acquireLock = false;
+var finishedSeach = true;
 var gameSize = String($("#game").width());
 var checkGoalInterval = setInterval(boxInCorrectPosition,15);
 var checkSolvedByUser = setInterval(solvedByUser,15);
@@ -643,5 +651,6 @@ function shuffle() { /// shuffle the boxes when getting the solution in the sear
         $("#stopbtn").hide();
         $("#solvebtn").show();
         stopClicked = false;
+        finishedSeach = true;
     }
 }
