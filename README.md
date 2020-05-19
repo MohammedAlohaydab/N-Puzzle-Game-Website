@@ -15,7 +15,7 @@ In this game you can solve the puzzle and when you get in stuck, ask our agent t
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/mohammedib/NPuzzle-Game-Website.git
+git clone https://github.com/mohammedib/N-Puzzle-Game-Website
 ```
 
 Install the requirements:

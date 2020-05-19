@@ -1,22 +1,6 @@
 $(function () {
-    // variables   
-    var CustomState = false;  // used?    
-    var init;
-    var empty = [];
-    var tempState = [];
-    var state_size;
-    var sizeOfPex;
-    var period;
-    var sol_path = [];
-    var zeroID;
-    var isSolveable;
-    var pathCost;
-    var maxStoredNodes;
-    var numProcessedNodes;
-    var timeTaken;
-    var searchMode= false;    
-    var stopClicked = false;
-    // initalize
+   
+    // initialize
     generateRandomState(3,true);
    
 //   events
@@ -24,7 +8,6 @@ $(function () {
         $(this).css("cursor", "pointer");
     });
 
-    // Button hover effect
     $(".button").hover(function () {
         $(this).css({ background: "white", color: "black" });
     }, function () {
@@ -32,10 +15,10 @@ $(function () {
     });
 
     $('#sizeNbox').keydown(function (e) {
-         checkIntegerInput(1,2);
+         checkIntegerInput(this,1,2);
     });
     $('#sizeNbox').keyup(function (e) {
-        checkIntegerInput(1,2);
+        checkIntegerInput(this,1,2);
     });
     $("#sizeNbox").change(function(){
         newRandomState();
@@ -81,10 +64,10 @@ $(function () {
     });
 
     $('#depth-size').keydown(function (e) {
-        checkIntegerInput(Infinity,0);
+        checkIntegerInput(this,Infinity,0);
    });
    $('#depth-size').keyup(function (e) {
-       checkIntegerInput(Infinity,0);
+       checkIntegerInput(this,Infinity,0);
    });
 
     $("#cancelbtnForDepth").click(function(){
@@ -110,56 +93,95 @@ $(function () {
          }
          searchAlgo();
      });
-// functions
-
-    function generateRandomState(sizeofState,firstTime){
-        $.ajax({
-            type: 'POST',
-            async:false,
-            url: 'generate_state/',
-            data: {
-                size: sizeofState,
-                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-            },
-            success: function (data) {
-                SaveData(data.state);
-               
-                if(firstTime){
-                        buildBoard();         
-                        $("#game").show().animate({ left: "0px" }, 900);
-            }
-                else{
-                    $("#game").empty();
-                    buildBoard();
-                }
-            }
-        });
-        
-        if(solvedState())
-            generateRandomState(sizeofState,false);
-    }
-
-    function newRandomState() {
-        var size = $("#sizeNbox").val();
-        generateRandomState(size,false);
-    }
 
 });
-function checkIntegerInput(max_chars,minValue) {
-    if ($(this).val().length >= max_chars) {
-        $(this).val($(this).val().substr(0, max_chars));
+
+// variables     
+var init;
+var empty = [];
+var tempState = [];
+var state_size;
+var sizeOfPex;
+var period;
+var sol_path = [];
+var zeroID;
+var isSolveable;
+var pathCost;
+var maxStoredNodes;
+var numProcessedNodes;
+var timeTaken;
+var searchMode= false;    
+var stopClicked = false;
+var Depth = 0;
+var acquireLock = false;
+var gameSize = String($("#game").width());
+var checkGoalInterval = setInterval(boxInCorrectPosition,15);
+var checkSolvedByUser = setInterval(solvedByUser,15);
+
+
+// functions
+
+function generateRandomState(sizeofState,firstTime){
+    $.ajax({
+        type: 'POST',
+        async:false,
+        url: 'generate_state/',
+        data: {
+            size: sizeofState,
+            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+        },
+        success: function (data) {
+            SaveData(data.state);
+            
+            if(firstTime){
+                    buildBoard();         
+                    $("#game").show().animate({ left: "0px" }, 900);
+        }
+            else{
+                $("#game").empty();
+                buildBoard();
+            }
+        }
+    });
+    
+    if(solvedState())
+        generateRandomState(sizeofState,false);
+}
+
+function newRandomState() {
+    var size = $("#sizeNbox").val();
+    if(size === ""){
+        $("#errorInChooseAlgo").text("Enter the size!");
+        $("#errorInChooseAlgo").show();
+        return;
     }
-    if ($(this).val() < minValue ) {
-        $(this).val("");
+    else{
+        $("#errorInChooseAlgo").hide();
+    }
+    generateRandomState(size,false);
+}
+
+
+function checkIntegerInput(id,max_chars,minValue) {
+    if ($(id).val().length >= max_chars) {
+        $(id).val($(id).val().substr(0, max_chars));
+    }
+    if ($(id).val() < minValue || !$.isNumeric($(id).val() ) ) {
+        $(id).val("");
     }
 }
-var gameSize = String($("#game").width());
-var checkGoalInterval = setInterval(boxInCorrectPosition,10);
-var checkSolvedByUser = setInterval(solvedByUser,10);
-
+ 
 function showEnterCustomState() {
     var expampleState = "";
-    var sizenbox = Number($("#sizeNbox").val());
+    var sizenbox = ($("#sizeNbox").val());
+    if(sizenbox === ""){
+        $("#errorInChooseAlgo").text("Enter the size!");
+        $("#errorInChooseAlgo").show();
+        return;
+    }
+    else{
+        $("#errorInChooseAlgo").hide();
+    }
     var size = ((sizenbox) * (sizenbox));
     var i = 1;
     for (i = 1; i < size - 1; i++) {
@@ -328,7 +350,7 @@ function initial_state(size,tempState) {
 
 }
 
-var Depth = 0;
+
 function setDepth(d) {
     Depth = d;
 }
@@ -442,9 +464,10 @@ function getSolution(curState) {
     }).done(function (data) {
         if (data.solution === null) {
             if (getDepth() !== 0) {
+                var currDepth = Number(getDepth());
                 $("#dialogForGame ").css("width", "380px");
                 $("#dialogForGame > p").css("font-size", "20px");
-                $("#dialogForGame > p").text("Could not find the solution at depth = " + getDepth() + " !");
+                $("#dialogForGame > p").text("Could not find the solution at depth = " + currDepth + " !");
                 $("#stopbtn").hide();
                 $("#solvebtn").show();
             }
@@ -474,7 +497,7 @@ function setProcessedNodesZero() {
     }
     );
 }
-var acquireLock = false;
+
 //  Builds the game board by filling the pieces with the current state (either random or custom) with help of "init"
 function buildBoard() {
     var size = Number($("#sizeNbox").val());
