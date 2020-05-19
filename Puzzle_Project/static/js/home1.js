@@ -152,7 +152,7 @@ function newRandomState() {
     var enteredSize = checkInputSize();
     if( !enteredSize)
         return;
-    
+
     var size = $("#sizeNbox").val();
     generateRandomState(size,false);
 }
