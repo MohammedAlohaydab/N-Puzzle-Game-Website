@@ -149,18 +149,24 @@ function generateRandomState(sizeofState,firstTime){
 }
 
 function newRandomState() {
+    var enteredSize = checkInputSize();
+    if( !enteredSize)
+        return;
+    generateRandomState(size,false);
+}
+
+function checkInputSize() {
     var size = $("#sizeNbox").val();
     if(size === ""){
         $("#errorInChooseAlgo").text("Enter the size!");
         $("#errorInChooseAlgo").show();
-        return;
+        return false;
     }
     else{
         $("#errorInChooseAlgo").hide();
+        return true;
     }
-    generateRandomState(size,false);
 }
-
 
 function checkIntegerInput(id,max_chars,minValue) {
     if ($(id).val().length >= max_chars) {
@@ -366,12 +372,17 @@ function validateFormCoices() {
     return true;
 }
 function readyToSolve() {
+    var enteredSize = checkInputSize();
+    if( !enteredSize)
+        return false;    
+
     var flagSolved = solvedState();
     if(flagSolved){
         $("#errorInChooseAlgo").text("Solved !");
         $("#errorInChooseAlgo").show();
         return false;
     }
+    
     var flagVald = validateFormCoices();
     if(!flagVald){
         $("#errorInChooseAlgo").text("choose algo");
