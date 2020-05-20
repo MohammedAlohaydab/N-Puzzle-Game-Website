@@ -20,10 +20,7 @@ $(function () {
     $('#sizeNbox').keyup(function (e) {
         checkIntegerInput(this,1,2);
     });
-    $("#sizeNbox").change(function(){
-        if(!finishedSeach)
-            return;
-        
+    $("#sizeNbox").change(function(){      
         newRandomState();
         hideStatisticsIfThere();
     });
@@ -157,6 +154,9 @@ function generateRandomState(sizeofState,firstTime){
 }
 
 function newRandomState() {
+    if(!finishedSeach) // in case of sliding puzzle, do not change the state! 
+            return;
+
     var enteredSize = checkInputSize();
     if( !enteredSize)
         return;
@@ -188,7 +188,9 @@ function checkIntegerInput(id,max_chars,minValue) {
 }
  
 function showEnterCustomState() {
-    var expampleState = "";
+    if(!finishedSeach) // in case of sliding puzzle, do not change the state! 
+            return;
+
     var sizenbox = ($("#sizeNbox").val());
     if(sizenbox === ""){
         $("#errorInChooseAlgo").text("Enter the size!");
@@ -198,6 +200,7 @@ function showEnterCustomState() {
     else{
         $("#errorInChooseAlgo").hide();
     }
+    var expampleState = "";
     var size = ((sizenbox) * (sizenbox));
     var i = 1;
     for (i = 1; i < size - 1; i++) {
@@ -417,6 +420,7 @@ function solvedState() {
 function stopBtnAlgo() {
     searchMode = false;
     stopClicked = true;
+    finishedSeach = true;
     $("#stopbtn").hide();
     $("#dialogForGame").hide();
     $("#solvebtn").show();
