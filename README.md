@@ -2,7 +2,7 @@
 
 The N-puzzle problem consists of a puzzle composed by (n x n) - 1 tiles, numbered from 1 to n^2– 1. The last position that would define the squared form of the puzzle is an empty space.
 
-In this game you can solve the puzzle and when you get in stuck, ask our agent to solve it since this project was intentionally programmed to solve the N-puzzle problem with artificial inelegance algorithms,  four uninformed searches (Breadth-First Search, Depth-First Search, Iterative Deepening Search and Depth Limited Search ) and two informed searches (Greedy Search and A* Search) were developed
+In this game you can play and solve the puzzle and when you get stuck, ask our agent to solve it since this project was intentionally programmed to solve the N-puzzle problem with artificial inelegance algorithms, four uninformed searches (Breadth-First Search, Depth-First Search, Iterative Deepening Search and Depth Limited Search ) and two informed searches (Greedy Search and A* Search) were developed
 
 
  Checkout the [website](http://npuzzle.pythonanywhere.com/)
